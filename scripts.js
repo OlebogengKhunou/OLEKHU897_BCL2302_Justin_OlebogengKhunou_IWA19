@@ -1,9 +1,8 @@
 import { authors } from "./data.js";
 import { genres } from "./data.js";
 import { books } from "./data.js";
-let matches = books
-let page = 1;
 
+// settings for day and night mode colors
 const day = {
     dark: '10, 10, 20',
     light: '255, 255, 255',
@@ -23,8 +22,7 @@ document.querySelector('[data-list-button]').disabled = false
 document.querySelector('[data-list-button]').innerHTML =  `Show more (${books.length - 36})`
 })
 
-
-//Search button
+//Search button to close and open Search overlay
 const searchbutton = document.querySelector("[data-header-search]");
 searchbutton.addEventListener('click', (event) => {
  document.querySelector("[data-search-overlay]").style.display = "block";
@@ -33,7 +31,39 @@ const searchCancel = document.querySelector("[data-search-cancel]");
 searchCancel.addEventListener('click', (event) => {
  document.querySelector("[data-search-overlay]").style.display = "none";
 })
-// Search specific books
+
+// Search function to store more options to chose in genres and authors selects 
+const authorFragment = document.createDocumentFragment();
+let element = document.createElement('option');
+element.value = 'any';
+element.innerText = 'All Authors';
+authorFragment.appendChild(element);
+for (let [id, name] of Object.entries(authors)) {
+  const element = document.createElement('option');
+  const value = id;
+  const text = name;
+  element.value = value;
+  element.innerText = text;
+  authorFragment.appendChild(element);
+}
+document.querySelector('[data-search-authors]').appendChild(authorFragment);
+
+const genresFragment = document.createDocumentFragment();
+let element2 = document.createElement('option');
+element2.value = 'any';
+element2.innerText = 'All Genres';
+genresFragment.appendChild(element2);
+for (let [id, name] of Object.entries(genres)) {
+  const element = document.createElement('option');
+  const value = id;
+  const text = name;
+  element.value = value;
+  element.innerText = text;
+  genresFragment.appendChild(element);
+}
+document.querySelector('[data-search-genres]').appendChild(genresFragment);
+
+// Search specific books using options
 const searchFilter = document.querySelector('[data-search-form]')
 searchFilter.addEventListener('submit', (event)=>{
     event.preventDefault();
@@ -107,7 +137,9 @@ const fragment2 = document.createDocumentFragment()
         document.querySelector("[data-search-overlay]").style.display = "none";
     })
 
-//Settings Button
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Settings Button to open and close the settings overlay
 const settingbutton = document.querySelector("[data-header-settings]")
 settingbutton.addEventListener('click', (event) => {
  document.querySelector("[data-settings-overlay]").style.display = "block";
@@ -116,6 +148,7 @@ const settingCancel = document.querySelector('[data-settings-cancel]')
 settingCancel.addEventListener('click', (event) => {
 document.querySelector("[data-settings-overlay]").style.display = "none";
 })
+
 //Theme To Light and Dark Mode
 const dataSettingsTheme = document.querySelector('[data-settings-theme]')
 const saveButton = document.querySelector('[form="settings"]')
@@ -132,42 +165,9 @@ saveButton.addEventListener('click', (event) =>{
     document.querySelector("[data-settings-overlay]").style.display = "none";
       }
 } )
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Search Button
-const authorFragment = document.createDocumentFragment();
-let element = document.createElement('option');
-element.value = 'any';
-element.innerText = 'All Authors';
-authorFragment.appendChild(element);
-for (let [id, name] of Object.entries(authors)) {
-  const element = document.createElement('option');
-  const value = id;
-  const text = name;
-  element.value = value;
-  element.innerText = text;
-  authorFragment.appendChild(element);
-}
-document.querySelector('[data-search-authors]').appendChild(authorFragment);
-
-const genresFragment = document.createDocumentFragment();
-let element2 = document.createElement('option');
-element2.value = 'any';
-element2.innerText = 'All Genres';
-genresFragment.appendChild(element2);
-for (let [id, name] of Object.entries(genres)) {
-  const element = document.createElement('option');
-  const value = id;
-  const text = name;
-  element.value = value;
-  element.innerText = text;
-  genresFragment.appendChild(element);
-}
-document.querySelector('[data-search-genres]').appendChild(genresFragment);
-
-//////////////////////////////////////////////////////////
-
-// Grid
-
+// Create book object to be display when the page is first run and in grid like form
 let startIndex = 0;
 let endIndex = 36;
 const fragment1 = document.createDocumentFragment()
@@ -194,7 +194,7 @@ const extracted1 = books.slice(startIndex, endIndex)
 const booklist1 = document.querySelector('[data-list-items]')
 booklist1.appendChild(fragment1)
 
-// Show more button
+// Show more button to show(append) more books when it is clicked and decrease the number of books not showen wet.
 const showMoreButton = document.querySelector('[data-list-button]')
 let numOfBooks = books.length -36
 showMoreButton.innerHTML =  `Show more (${numOfBooks})`
@@ -238,8 +238,7 @@ for (const {author ,image, title, id , description, published} of extracted) {
 })
 
 
-// when click on each book display details
-
+// Function to display an overlay of each book's information when each book is clicked 
 const detailsToggle = (event) => {
     const overlay1 = document.querySelector('[data-list-active]');
     const title = document.querySelector('[data-list-title]')
